@@ -2,8 +2,7 @@
 ## Calculate MSOA-level deprivation
 ##
 library(tidyverse)
-# library(readxl)
-# library(httr)
+library(Hmisc)
 
 # ---- Functions for aggregating IMD into higher level geographies ----
 #' Invert deciles, ranks, percentiles etc.
@@ -131,5 +130,11 @@ imd_lsoa = imd %>%
 
 imd_msoa = imd_lsoa %>% 
   aggregate_scores(domain = "Index of Multiple Deprivation (IMD)", aggregate_by = "MSOA11CD", population_col = "n")
+
+# Calculate deciles for each measure
+imd_msoa = imd_msoa %>% 
+  mutate(Proportion_Decile = as.integer(cut2(Proportion, g = 10)),
+         Extent_Decile     = as.integer(cut2(Extent, g = 10)),
+         Score_Decile      = as.integer(cut2(Score, g = 10)))
 
 write_csv(imd_msoa, "data/IMD by MSOA.csv")
