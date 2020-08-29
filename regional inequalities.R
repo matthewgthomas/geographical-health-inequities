@@ -42,7 +42,7 @@ ruc_msoa = ruc %>%
   
   tabyl(MSOA11CD, RUC) %>% 
   mutate(Proportion_Urban = Urban / (Urban + Rural)) %>% 
-  mutate(RUC = if_else(Urban > 0.5, "Mostly urban", "Mostly rural"))
+  mutate(RUC = if_else(Urban > 0.5, "Urban", "Rural"))
 
 
 # ---- Plot life expectancy by IMD, RUC, region ----
@@ -52,14 +52,6 @@ le = le %>%
   left_join(msoa_region, by = "MSOA11CD") %>% 
   left_join(ruc_msoa, by = "MSOA11CD")
 
-le %>%
-  filter(Sex == "Male") %>% 
-  
-  ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM, fill = RGNNM)) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm") +
-  facet_wrap(~RUC)
-
 
 # ---- Plot healthy life expectancy by IMD, RUC, region ----
 hle = hle %>% 
@@ -67,15 +59,3 @@ hle = hle %>%
   left_join(imd, by = "MSOA11CD") %>% 
   left_join(msoa_region, by = "MSOA11CD") %>% 
   left_join(ruc_msoa, by = "MSOA11CD")
-
-plt_hle = hle %>%
-  filter(Sex == "Male") %>% 
-  
-  ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm") +
-  facet_wrap(~RUC)
-
-library(plotly)
-ggplotly(plt_hle)
-

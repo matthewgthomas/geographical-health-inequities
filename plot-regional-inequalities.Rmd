@@ -1,0 +1,70 @@
+---
+title: "Geographical health inequalities"
+author: "Dr Matthew Gwynfryn Thomas"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_data, include=FALSE}
+library(tidyverse)
+library(plotly)
+
+source("regional inequalities.R")
+```
+
+# Male life expectancy by region and deprivation
+
+```{r le_region, echo=FALSE}
+plt_le = le %>%
+  filter(Sex == "Male") %>% 
+  
+  ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM, fill = RGNNM)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm")
+
+ggplotly(plt_le)
+```
+
+### ... split by rural and urban areas
+
+```{r le_ruc, echo=FALSE}
+plt_le = le %>%
+  filter(Sex == "Male") %>% 
+  
+  ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM, fill = RGNNM)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~RUC)
+
+ggplotly(plt_le)
+```
+
+# Male healthy life expectancy by region and deprivation
+
+```{r hle_region, echo=FALSE}
+plt_hle = hle %>%
+  filter(Sex == "Male") %>% 
+  
+  ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm")
+
+ggplotly(plt_hle)
+```
+
+### ... split by rural and urban areas
+
+```{r hle_ruc, echo=FALSE}
+plt_hle = hle %>%
+  filter(Sex == "Male") %>% 
+  
+  ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~RUC)
+
+ggplotly(plt_hle)
+```
