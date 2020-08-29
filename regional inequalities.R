@@ -68,11 +68,14 @@ hle = hle %>%
   left_join(msoa_region, by = "MSOA11CD") %>% 
   left_join(ruc_msoa, by = "MSOA11CD")
 
-hle %>%
+plt_hle = hle %>%
   filter(Sex == "Male") %>% 
   
   ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm") +
   facet_wrap(~RUC)
+
+library(plotly)
+ggplotly(plt_hle)
 
