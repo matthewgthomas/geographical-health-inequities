@@ -55,7 +55,23 @@ le = le %>%
 le %>%
   filter(Sex == "Male") %>% 
   
-  ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM)) +
+  ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM, fill = RGNNM)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~RUC)
+
+
+# ---- Plot healthy life expectancy by IMD, RUC, region ----
+hle = hle %>% 
+  select(MSOA11CD = `Area Code`, Sex, `Healthy life expectancy` = Value) %>% 
+  left_join(imd, by = "MSOA11CD") %>% 
+  left_join(msoa_region, by = "MSOA11CD") %>% 
+  left_join(ruc_msoa, by = "MSOA11CD")
+
+hle %>%
+  filter(Sex == "Male") %>% 
+  
+  ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
   geom_point(alpha = 0.1) +
   geom_smooth(method = "lm") +
   facet_wrap(~RUC)
