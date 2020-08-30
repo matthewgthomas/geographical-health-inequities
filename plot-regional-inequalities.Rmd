@@ -15,15 +15,17 @@ library(plotly)
 source("regional inequalities.R")
 ```
 
-# Male life expectancy by region and deprivation
+# Male life expectancy at birth by region and deprivation
 
 ```{r le_region, echo=FALSE}
 plt_le = le %>%
   filter(Sex == "Male") %>% 
   
   ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM, fill = RGNNM)) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm")
+  #geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  labs(x = "Deprivation decile (1 = most deprived)", colour = "Region", fill = "Region") +
+  theme_classic()
 
 ggplotly(plt_le)
 ```
@@ -35,22 +37,26 @@ plt_le = le %>%
   filter(Sex == "Male") %>% 
   
   ggplot(aes(x = Score_Decile, y = `Life expectancy`, colour = RGNNM, fill = RGNNM)) +
-  geom_point(alpha = 0.1) +
+  # geom_point(alpha = 0.1) +
   geom_smooth(method = "lm") +
-  facet_wrap(~RUC)
+  facet_wrap(~RUC) +
+  labs(x = "Deprivation decile (1 = most deprived)", colour = "Region", fill = "Region") +
+  theme_classic()
 
 ggplotly(plt_le)
 ```
 
-# Male healthy life expectancy by region and deprivation
+# Male healthy life expectancy at birth by region and deprivation
 
 ```{r hle_region, echo=FALSE}
 plt_hle = hle %>%
   filter(Sex == "Male") %>% 
   
   ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm")
+  # geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm") +
+  labs(x = "Deprivation decile (1 = most deprived)", colour = "Region", fill = "Region") +
+  theme_classic()
 
 ggplotly(plt_hle)
 ```
@@ -62,9 +68,23 @@ plt_hle = hle %>%
   filter(Sex == "Male") %>% 
   
   ggplot(aes(x = Score_Decile, y = `Healthy life expectancy`, colour = RGNNM, fill = RGNNM)) +
-  geom_point(alpha = 0.1) +
+  # geom_point(alpha = 0.1) +
   geom_smooth(method = "lm") +
-  facet_wrap(~RUC)
+  facet_wrap(~RUC) +
+  labs(x = "Deprivation decile (1 = most deprived)", colour = "Region", fill = "Region") +
+  theme_classic()
 
 ggplotly(plt_hle)
+```
+
+# Show distribution of male life expectancy data
+
+```{r le_violins, echo=FALSE}
+le %>%
+  filter(Sex == "Male") %>% 
+  
+  ggplot(aes(x = factor(Score_Decile), y = `Life expectancy`, colour = RGNNM)) +
+  geom_boxplot() +
+  labs(x = "Deprivation decile (1 = most deprived)", colour = "Region", fill = "Region") +
+  theme_classic()
 ```
