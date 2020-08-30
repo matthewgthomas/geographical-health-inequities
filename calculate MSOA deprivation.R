@@ -40,7 +40,7 @@ pop_weighted_scores = function(d,
     mutate(Percentile = round((!!sym(rank_col) / max(!!sym(rank_col))) * 100, 0)) %>% 
     
     # invert percentiles because, in the Vulnerability Index, higher percentiles mean higher vulnerability - but the extent score calculation below assumes lower percentiles mean higher vulnerability
-    mutate(Percentile = invert_this(Percentile)) %>%
+    # mutate(Percentile = invert_this(Percentile)) %>%
     
     # calculate extent: a weighted score based on the population in the most deprived 30% of areas
     # from the IMD technical report Appendix N:
@@ -86,10 +86,10 @@ aggregate_scores = function(d,
   
   decile_col = paste0(domain, " ", decile_suffix)
   
-  # calculate proportions of highly vulnerable MSOAs in the higher-level geography
+  # calculate proportions of highly deprived MSOAs in the higher-level geography
   d_props = d %>% 
-    # label MSOAs by whether they're in top 20% most-vulnerable then summarise by this label
-    mutate(Top20 = ifelse(!!sym(decile_col) >= 9, "Top20", "Other")) %>% 
+    # label MSOAs by whether they're in top 20% most-deprived then summarise by this label
+    mutate(Top20 = ifelse(!!sym(decile_col) <= 2, "Top20", "Other")) %>% 
     janitor::tabyl(!!sym(aggregate_by), Top20) %>% 
     
     # calculate proportion of most deprived LSOAs
@@ -131,10 +131,14 @@ imd_lsoa = imd %>%
 imd_msoa = imd_lsoa %>% 
   aggregate_scores(domain = "Index of Multiple Deprivation (IMD)", aggregate_by = "MSOA11CD", population_col = "n")
 
-# Calculate deciles for each measure
+# Calculate deciles for each measure (where 1 = most deprived)
 imd_msoa = imd_msoa %>% 
   mutate(Proportion_Decile = as.integer(cut2(Proportion, g = 10)),
          Extent_Decile     = as.integer(cut2(Extent, g = 10)),
-         Score_Decile      = as.integer(cut2(Score, g = 10)))
+         Score_Decile      = as.integer(cut2(Score, g = 10))) %>% 
+  
+  mutate(Proportion_Decile = invert_this(Proportion_Decile),
+         Extent_Decile     = invert_this(Extent_Decile),
+         Score_Decile      = invert_this(Score_Decile))
 
 write_csv(imd_msoa, "data/IMD by MSOA.csv")
