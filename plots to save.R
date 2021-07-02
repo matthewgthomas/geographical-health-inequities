@@ -21,7 +21,7 @@ hle %>%
   theme_classic() +
   theme(legend.position = "bottom")
 
-ggsave("charts/male healthy life expectancy by region and rurality.png", height = 100, width = 150, units = "mm")
+ggsave("charts/male healthy life expectancy by region and rurality.png", height = 80, width = 150, units = "mm")
 
 hle %>%
   filter(Sex == "Female") %>% 
