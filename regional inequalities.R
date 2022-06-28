@@ -1,4 +1,5 @@
 library(tidyverse)
+library(geographr)
 library(readxl)
 library(janitor)
 
@@ -26,8 +27,11 @@ msoa_region = read_csv("https://github.com/drkane/geo-lookups/raw/master/msoa_la
   select(MSOA11CD, RGNNM)
 
 # Rural-urban classifications for LSOAs
-ruc = read_csv("https://github.com/matthewgthomas/IMD/raw/master/data/UK%20IMD%20domains.csv") %>% 
-  select(LSOA, RUC)
+# ruc = read_csv("https://github.com/matthewgthomas/IMD/raw/master/data/UK%20IMD%20domains.csv") %>% 
+#   select(LSOA, RUC)
+
+ruc = geographr::ruc11_lsoa11 |> 
+  select(LSOA = lsoa11_code, RUC = ruc)
 
 # Output Area to LSOA to MSOA to Local Authority District (December 2017) Lookup with Area Classifications in Great Britain
 # source: http://geoportal.statistics.gov.uk/datasets/fe6c55f0924b4734adf1cf7104a0173e_0
